@@ -125,8 +125,6 @@ class Game:
                 if ball.hits == Config.MAX_BALL_HITS:
                     balls.remove(ball)
 
-                # Ball/Tank colision
-
                 if ball.is_colliding(tank_2.coordinate, tank_2.dimension):
                     if ball.player == 1:
                         self.player_1_score.increment()
@@ -138,18 +136,15 @@ class Game:
                         self.player_2_score.increment()
                         balls.remove(ball)
                         tank_1.change_position()
-                        
-                # Ball/Brick colision
 
-                    
-                if ( # Left Brick
+                if (
                     ball.is_colliding(brick_left_1.coordinate, brick_left_1.dimension)
                     or ball.is_colliding(
                         brick_left_2.coordinate, brick_left_2.dimension
                     )
                     or ball.is_colliding(
                         brick_left_3.coordinate, brick_left_3.dimension
-                    ) # Right Brick
+                    )
                     or ball.is_colliding(
                         brick_right_1.coordinate, brick_right_1.dimension
                     )
@@ -158,7 +153,7 @@ class Game:
                     )
                     or ball.is_colliding(
                         brick_right_3.coordinate, brick_right_3.dimension
-                    ) # Center Brick
+                    )
                     or ball.is_colliding(
                         brick_center_1.coordinate, brick_center_1.dimension
                     )
@@ -172,11 +167,10 @@ class Game:
                         brick_center_4.coordinate, brick_center_4.dimension
                     )
                 ):
-                    ball.y_velocity *= -1
-                    ball.x_velocity *= -1
+                    ball.y_velocity = -1
+                    ball.x_velocity = -1
 
                 ball.draw(screen)
-                ball.play_sounds_hit()
 
             brick_center_1.draw(screen)
             brick_center_2.draw(screen)
