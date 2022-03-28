@@ -38,7 +38,9 @@ class Game:
             if event.type == pygame.QUIT:
                 self.is_running = False
 
-    def play(self): # Implement game loop (draw all elements (Screen, HUD, Tanks, Bricks))
+    def play(
+        self,
+    ):  # Implement game loop (draw all elements (Screen, HUD, Tanks, Bricks))
 
         # Initializze pygame inside game loop
         pygame.init()
@@ -139,7 +141,8 @@ class Game:
                         self.tank_1.coordinate.x -= 1
                         self.tank_1.coordinate.y -= 1
                         has_collision = True
-                if not has_collision: self.tank_1.move_up()
+                if not has_collision:
+                    self.tank_1.move_up()
 
             if keys[pygame.K_a]:
                 self.tank_1.rotate(45)
@@ -149,8 +152,9 @@ class Game:
                 pygame.time.delay(60)
             if keys[pygame.K_f]:
                 has_ball = False
-                for ball in self.balls: 
-                    if ball.player == 1: has_ball = True
+                for ball in self.balls:
+                    if ball.player == 1:
+                        has_ball = True
                 if not has_ball:
                     new_ball = self.tank_1.fire(
                         self.config.COLORS["BLACK"], self.config.BALL_DRAW_VELOCITY
@@ -167,7 +171,8 @@ class Game:
                         self.tank_2.coordinate.x += 1.1
                         self.tank_2.coordinate.y -= 1.1
                         has_collision = True
-                if not has_collision: self.tank_2.move_up()
+                if not has_collision:
+                    self.tank_2.move_up()
 
             if keys[pygame.K_LEFT]:
                 self.tank_2.rotate(45)
@@ -178,7 +183,8 @@ class Game:
             if keys[pygame.K_SPACE]:
                 has_ball = False
                 for ball in self.balls:
-                    if ball.player == 2: has_ball = True
+                    if ball.player == 2:
+                        has_ball = True
                 if not has_ball:
                     new_ball = self.tank_2.fire(
                         self.config.COLORS["BLACK"], self.config.BALL_DRAW_VELOCITY
