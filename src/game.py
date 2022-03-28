@@ -1,4 +1,3 @@
-from typing import Sequence
 import pygame
 from modules.Brick import Brick
 from modules.Coordinate import Coordinate
@@ -18,55 +17,25 @@ class Game:
         self.player_1_score = Score()
         self.player_2_score = Score()
         self.config = config
-        self.screen: Screen = None
-        self.tank_1: Tank = None
-        self.tank_2: Tank = None
-        self.hud: HUD = None
-        self.boundary: Boundary = None
-        self.balls: Sequence[Ball] = []
-        self.bricks: Sequence[Brick] = []
-
-    def stop(self):  # Stop game
-        self.is_running = False
-
-    def reset(self):  # Reset all status
-        self.player_1_score.reset()
-        self.player_2_score.reset()
-
-    def use_global_events(self):  # Set global events (exit the game, ...)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.is_running = False
-
-    def play(
-        self,
-    ):  # Implement game loop (draw all elements (Screen, HUD, Tanks, Bricks))
-
-        # Initializze pygame inside game loop
-        pygame.init()
-
-        # Initialize mixer
-        pygame.mixer.init()
-        shot = pygame.mixer.Sound("src/sounds/shot.wav")
+        self.balls: list[Ball] = []
+        self.bricks: list[Brick] = []
 
         # Create screen
         self.screen = Screen(
             Dimension(self.config.SCREEN_WIDTH, self.config.SCREEN_HEIGHT),
             self.config.COLORS["GREEN"],
         )
-        pygame.display.set_caption("TANK PONG")
-        clock = pygame.time.Clock()
 
         # Players
         self.tank_1 = Tank(
-            Coordinate(self.config.SCREEN_WIDTH * (0.1), 320),
+            Coordinate(self.config.SCREEN_WIDTH * 0.1, 320),
             self.config.SPRITES_PATH["PLAYER_1"],
             1,
             self.screen.dimension.width,
             self.screen.dimension.height,
         )
         self.tank_2 = Tank(
-            Coordinate(self.config.SCREEN_WIDTH * (0.9), 320),
+            Coordinate(self.config.SCREEN_WIDTH * 0.9, 320),
             self.config.SPRITES_PATH["PLAYER_2"],
             2,
             self.screen.dimension.width,
@@ -88,6 +57,32 @@ class Game:
 
         # Boundaries
         self.boundary = Boundary(self.config.COLORS["ORANGE"])
+
+    def stop(self):  # Stop game
+        self.is_running = False
+
+    def reset(self):  # Reset all status
+        self.player_1_score.reset()
+        self.player_2_score.reset()
+
+    def use_global_events(self):  # Set global events (exit the game, ...)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.is_running = False
+
+    def play(
+        self,
+    ):  # Implement game loop (draw all elements (Screen, HUD, Tanks, Bricks))
+
+        # Initialize pygame inside game loop
+        pygame.init()
+
+        # Initialize mixer
+        pygame.mixer.init()
+        shot = pygame.mixer.Sound("src/sounds/shot.wav")
+
+        pygame.display.set_caption("TANK PONG")
+        clock = pygame.time.Clock()
 
         while self.is_running:
             self.use_global_events()

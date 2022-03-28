@@ -1,4 +1,3 @@
-from turtle import color
 import pygame
 from modules.Brick import Brick
 from modules.Coordinate import Coordinate
@@ -83,22 +82,24 @@ class Ball:
                 self.y_velocity *= -1
 
     def is_colliding(self, coordinate: Coordinate, dimension: Dimension) -> bool:
-        x_colision = coordinate.x <= self.coordinate.x <= coordinate.x + dimension.width
-        y_colision = (
+        x_collision = (
+            coordinate.x <= self.coordinate.x <= coordinate.x + dimension.width
+        )
+        y_collision = (
             coordinate.y <= self.coordinate.y <= coordinate.y + dimension.height
         )
-        return x_colision and y_colision
+        return x_collision and y_collision
 
     def draw(self, screen: Screen):  # Fires at a coordinate
         from pygame import mixer
 
         mixer.init()
 
-        colision_1 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall1.wav")
-        colision_2 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall2.wav")
-        colision_3 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall3.wav")
-        colision_4 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall4.wav")
-        colision_5 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall5.wav")
+        collision_1 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall1.wav")
+        collision_2 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall2.wav")
+        collision_3 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall3.wav")
+        collision_4 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall4.wav")
+        collision_5 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall5.wav")
 
         self.coordinate.x += self.velocity * self.x_velocity
         self.coordinate.y += self.velocity * self.y_velocity
@@ -118,57 +119,57 @@ class Ball:
             self.hits += 1
 
             if self.hits == 1:
-                colision_1.play()
+                collision_1.play()
             if self.hits == 2:
-                colision_2.play()
+                collision_2.play()
             if self.hits == 3:
-                colision_3.play()
+                collision_3.play()
             if self.hits == 4:
-                colision_4.play()
+                collision_4.play()
             if self.hits == 5:
-                colision_5.play()
+                collision_5.play()
 
         if self.coordinate.y <= 75:
             self.y_velocity *= -1
             self.hits += 1
 
             if self.hits == 1:
-                colision_1.play()
+                collision_1.play()
             if self.hits == 2:
-                colision_2.play()
+                collision_2.play()
             if self.hits == 3:
-                colision_3.play()
+                collision_3.play()
             if self.hits == 4:
-                colision_4.play()
+                collision_4.play()
             if self.hits == 5:
-                colision_5.play()
+                collision_5.play()
 
         if self.coordinate.x <= 20:
             self.x_velocity *= -1
             self.hits += 1
 
             if self.hits == 1:
-                colision_1.play()
+                collision_1.play()
             if self.hits == 2:
-                colision_2.play()
+                collision_2.play()
             if self.hits == 3:
-                colision_3.play()
+                collision_3.play()
             if self.hits == 4:
-                colision_4.play()
+                collision_4.play()
             if self.hits == 5:
-                colision_5.play()
+                collision_5.play()
 
         if self.coordinate.x >= 772:
             self.x_velocity *= -1
             self.hits += 1
 
             if self.hits == 1:
-                colision_1.play()
+                collision_1.play()
             if self.hits == 2:
-                colision_2.play()
+                collision_2.play()
             if self.hits == 3:
-                colision_3.play()
+                collision_3.play()
             if self.hits == 4:
-                colision_4.play()
+                collision_4.play()
             if self.hits == 5:
-                colision_5.play()
+                collision_5.play()

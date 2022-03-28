@@ -35,8 +35,8 @@ class Config:
     BRICKS_COORDINATES = [
         [(SCREEN_WIDTH / 2) - 17.5, 180, 35, 80],
         [(SCREEN_WIDTH / 2) - 17.5, 425, 35, 80],
-        [SCREEN_WIDTH * (0.4) - 80, 325, 80, 30],
-        [SCREEN_WIDTH * (0.6), 325, 80, 30],
+        [SCREEN_WIDTH * 0.4 - 80, 325, 80, 30],
+        [SCREEN_WIDTH * 0.6, 325, 80, 30],
         [120, 270, 17, 110],
         [103, 253, 34, 17],
         [103, 380, 34, 17],

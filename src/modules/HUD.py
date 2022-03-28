@@ -26,9 +26,9 @@ class HUD:
         player_1_color: tuple,
         player_2_color: tuple,
     ):  # Draw HUD (players score)
-        x_player_1_score = screen.dimension.width * (0.25)
-        x_player_2_score = screen.dimension.width * (0.75)
-        y_players_score = screen.dimension.height * (0.05)
+        x_player_1_score = screen.dimension.width * 0.25
+        x_player_2_score = screen.dimension.width * 0.75
+        y_players_score = screen.dimension.height * 0.05
 
         self.draw_label(
             screen,

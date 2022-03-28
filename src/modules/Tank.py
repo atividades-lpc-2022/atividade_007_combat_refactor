@@ -110,27 +110,29 @@ class Tank(pygame.sprite.Sprite):
             self.coordinate.x = 750 - 20
 
     def is_colliding(self, coordinate: Coordinate, dimension: Dimension) -> bool:
-        x_colision = coordinate.x <= self.coordinate.x <= coordinate.x + dimension.width
-        y_colision = (
+        x_collision = (
+            coordinate.x <= self.coordinate.x <= coordinate.x + dimension.width
+        )
+        y_collision = (
             coordinate.y <= self.coordinate.y <= coordinate.y + dimension.height
         )
 
-        x_final_colision = (
+        x_final_collision = (
             coordinate.x
             <= self.coordinate.x + self.dimension.width
             <= coordinate.x + dimension.width
         )
-        y_final_colision = (
+        y_final_collision = (
             coordinate.y
             <= self.coordinate.y + self.dimension.height
             <= coordinate.y + dimension.height
         )
 
         return (
-            (x_colision and y_colision)
-            or (x_final_colision and y_final_colision)
-            or (x_colision and y_final_colision)
-            or (x_final_colision and y_colision)
+            (x_collision and y_collision)
+            or (x_final_collision and y_final_collision)
+            or (x_collision and y_final_collision)
+            or (x_final_collision and y_collision)
         )
 
     def fire(self, ball_color: pygame.Color, velocity: float) -> Ball:
