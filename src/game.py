@@ -130,7 +130,7 @@ class Game:
             for brick in self.bricks:
                 brick.draw(self.screen)
 
-            self.boundary.draw(self.screen.surface)
+            self.boundary.draw(self.screen)
 
             # Tank 1's movement
             keys = pygame.key.get_pressed()

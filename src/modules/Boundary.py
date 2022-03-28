@@ -1,21 +1,25 @@
 import pygame
-from config import *
+from modules.Screen import Screen
 
 
 class Boundary:
     def __init__(self, color: tuple):
         self.color = color
 
-    def draw(self, screen):
-        pygame.draw.rect(screen, self.color, (0, 55, Config.SCREEN_WIDTH, 20))
-        pygame.draw.rect(screen, self.color, (0, 55, 20, (Config.SCREEN_HEIGHT - 55)))
+    def draw(self, screen: Screen):
         pygame.draw.rect(
-            screen,
-            self.color,
-            ((Config.SCREEN_WIDTH - 20), 55, 20, (Config.SCREEN_HEIGHT - 55)),
+            screen.surface, self.color, (0, 55, screen.dimension.width, 20)
         )
         pygame.draw.rect(
-            screen,
+            screen.surface, self.color, (0, 55, 20, (screen.dimension.height - 55))
+        )
+        pygame.draw.rect(
+            screen.surface,
             self.color,
-            (20, (Config.SCREEN_HEIGHT - 20), (Config.SCREEN_WIDTH - 40), 20),
+            ((screen.dimension.width - 20), 55, 20, (screen.dimension.height - 55)),
+        )
+        pygame.draw.rect(
+            screen.surface,
+            self.color,
+            (20, (screen.dimension.height - 20), (screen.dimension.width - 40), 20),
         )
