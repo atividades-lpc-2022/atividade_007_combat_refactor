@@ -1,4 +1,3 @@
-from distutils.command.config import config
 from typing import Sequence
 import pygame
 from modules.Brick import Brick
@@ -14,10 +13,17 @@ from config import Config
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, config: Config):
         self.is_running = True
         self.player_1_score = Score()
         self.player_2_score = Score()
+        self.config = config
+        self.screen: Screen = None
+        self.tank_1: Tank = None
+        self.tank_2: Tank = None
+        self.hud: HUD = None
+        self.balls: Sequence[Ball] = []
+        self.bricks: Sequence[Brick] = []
 
     def stop(self):  # Stop game
         self.is_running = False
@@ -26,15 +32,12 @@ class Game:
         self.player_1_score.reset()
         self.player_2_score.reset()
 
-    def use_global_events(self):  # TODO: Set global events (exit the game, ...)
-
+    def use_global_events(self):  # Set global events (exit the game, ...)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.is_running = False
 
-    def play(
-        self,
-    ):  # TODO: Implement game loop (draw all elements (Screen, HUD, Tanks, Bricks))
+    def play(self): # Implement game loop (draw all elements (Screen, HUD, Tanks, Bricks))
 
         # Initializze pygame inside game loop
         pygame.init()
@@ -44,297 +47,139 @@ class Game:
         shot = pygame.mixer.Sound("src/sounds/shot.wav")
 
         # Create screen
-        screen = Screen(Dimension(Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT))
+        self.screen = Screen(
+            Dimension(self.config.SCREEN_WIDTH, self.config.SCREEN_HEIGHT),
+            self.config.COLORS["GREEN"],
+        )
         pygame.display.set_caption("TANK PONG")
         clock = pygame.time.Clock()
 
-        balls: Sequence[Ball] = []
-
         # Players
-        tank_1 = Tank(
-            Coordinate(Config.SCREEN_WIDTH * (0.1), 320),
-            Config.SPRITES_PATH["PLAYER_1"],
+        self.tank_1 = Tank(
+            Coordinate(self.config.SCREEN_WIDTH * (0.1), 320),
+            self.config.SPRITES_PATH["PLAYER_1"],
             1,
+            self.screen.dimension.width,
+            self.screen.dimension.height,
         )
-        tank_2 = Tank(
-            Coordinate(Config.SCREEN_WIDTH * (0.9), 320),
-            Config.SPRITES_PATH["PLAYER_2"],
+        self.tank_2 = Tank(
+            Coordinate(self.config.SCREEN_WIDTH * (0.9), 320),
+            self.config.SPRITES_PATH["PLAYER_2"],
             2,
+            self.screen.dimension.width,
+            self.screen.dimension.height,
         )
 
         # HUD
-        hud = HUD()
+        self.hud = HUD(self.config.FONT_PATH, self.config.FONT_SIZE)
 
         # Bricks
-        brick_center_1 = Brick(
-            Coordinate(Config.BRICKS_COORDINATES["XB_C1"], 
-            Config.BRICKS_COORDINATES["YB_C1"]),
-            Dimension(35, 80),
-            Config.COLORS["T_ORANGE"],
-        )
-        brick_center_2 = Brick(
-            Coordinate(Config.BRICKS_COORDINATES["XB_C2"],
-            Config.BRICKS_COORDINATES["YB_C2"]),
-            Dimension(35, 80),
-            Config.COLORS["T_ORANGE"],
-        )
-        brick_center_3 = Brick(
-            Coordinate(Config.BRICKS_COORDINATES["XB_C3"],
-            Config.BRICKS_COORDINATES["YB_C3"]),
-            Dimension(80, 30),
-            Config.COLORS["T_ORANGE"],
-        )
-        brick_center_4 = Brick(
-            Coordinate(Config.BRICKS_COORDINATES["XB_C4"],
-            Config.BRICKS_COORDINATES["YB_C4"]),
-            Dimension(80, 30),
-            Config.COLORS["T_ORANGE"],
-        )
-
-        brick_left_1 = Brick(
-            Coordinate(Config.BRICKS_COORDINATES["XB_L1"], 
-            Config.BRICKS_COORDINATES["YB_L1"] ),
-            Dimension(17, 110), 
-            Config.COLORS["T_ORANGE"]
-        )
-        brick_left_2 = Brick(
-            Coordinate(Config.BRICKS_COORDINATES["XB_L2"], 
-            Config.BRICKS_COORDINATES["YB_L2"] ),
-            Dimension(34, 17), 
-            Config.COLORS["T_ORANGE"]
-        )
-        brick_left_3 = Brick(
-            Coordinate(Config.BRICKS_COORDINATES["XB_L3"], 
-            Config.BRICKS_COORDINATES["YB_L3"]),
-            Dimension(34, 17), 
-            Config.COLORS["T_ORANGE"]
-        )
-
-        brick_right_1 = Brick(
-            Coordinate(Config.BRICKS_COORDINATES["XB_R1"], 
-            Config.BRICKS_COORDINATES["YB_R1"] ),
-            Dimension(17, 110), 
-            Config.COLORS["T_ORANGE"]
-        )
-        brick_right_2 = Brick(
-            Coordinate(Config.BRICKS_COORDINATES["XB_R2"], 
-            Config.BRICKS_COORDINATES["YB_R2"] ),
-            Dimension(34, 17), 
-            Config.COLORS["T_ORANGE"]
-        )
-        brick_right_3 = Brick(
-            Coordinate(Config.BRICKS_COORDINATES["XB_R3"], 
-            Config.BRICKS_COORDINATES["YB_R3"] ),
-            Dimension(34, 17), 
-            Config.COLORS["T_ORANGE"]
-        )
-
+        for brick_x, brick_y, brick_w, brick_h in self.config.BRICKS_COORDINATES:
+            self.bricks.append(
+                Brick(
+                    Coordinate(brick_x, brick_y),
+                    Dimension(brick_w, brick_h),
+                    self.config.COLORS["ORANGE"],
+                )
+            )
 
         while self.is_running:
             self.use_global_events()
 
-            screen.draw()
-            tank_1.draw(screen)
-            tank_2.draw(screen)
+            self.screen.draw()
+            self.tank_1.draw(self.screen)
+            self.tank_2.draw(self.screen)
 
-            hud.draw(
-                screen,
+            self.hud.draw(
+                self.screen,
                 self.player_1_score,
                 self.player_2_score,
-                Config.COLORS["RED"],
-                Config.COLORS["BLUE"],
+                self.config.COLORS["RED"],
+                self.config.COLORS["BLUE"],
             )
 
-            for ball in balls:
-                if ball.hits == Config.MAX_BALL_HITS:
-                    balls.remove(ball)
+            for ball in self.balls:
+                if ball.hits == self.config.MAX_BALL_HITS:
+                    self.balls.remove(ball)
 
-                if ball.is_colliding(tank_2.coordinate, tank_2.dimension):
+                if ball.is_colliding(self.tank_2.coordinate, self.tank_2.dimension):
                     if ball.player == 1:
                         self.player_1_score.increment()
-                        balls.remove(ball)
-                        tank_2.change_position()
+                        self.balls.remove(ball)
+                        self.tank_2.change_position()
 
-                if ball.is_colliding(tank_1.coordinate, tank_1.dimension):
+                if ball.is_colliding(self.tank_1.coordinate, self.tank_1.dimension):
                     if ball.player == 2:
                         self.player_2_score.increment()
-                        balls.remove(ball)
-                        tank_1.change_position()
+                        self.balls.remove(ball)
+                        self.tank_1.change_position()
 
-                if (
-                    ball.is_colliding(brick_left_1.coordinate, brick_left_1.dimension)
-                    or ball.is_colliding(
-                        brick_left_2.coordinate, brick_left_2.dimension
-                    )
-                    or ball.is_colliding(
-                        brick_left_3.coordinate, brick_left_3.dimension
-                    )
-                    or ball.is_colliding(
-                        brick_right_1.coordinate, brick_right_1.dimension
-                    )
-                    or ball.is_colliding(
-                        brick_right_2.coordinate, brick_right_2.dimension
-                    )
-                    or ball.is_colliding(
-                        brick_right_3.coordinate, brick_right_3.dimension
-                    )
-                    or ball.is_colliding(
-                        brick_center_1.coordinate, brick_center_1.dimension
-                    )
-                    or ball.is_colliding(
-                        brick_center_2.coordinate, brick_center_2.dimension
-                    )
-                    or ball.is_colliding(
-                        brick_center_3.coordinate, brick_center_3.dimension
-                    )
-                    or ball.is_colliding(
-                        brick_center_4.coordinate, brick_center_4.dimension
-                    )
-                ):
-                    ball.y_velocity = -1
-                    ball.x_velocity = -1
+                for brick in self.bricks:
+                    if ball.is_colliding(brick.coordinate, brick.dimension):
+                        ball.y_velocity = -1
+                        ball.x_velocity = -1
 
-                ball.draw(screen)
+                ball.draw(self.screen)
 
-            brick_center_1.draw(screen)
-            brick_center_2.draw(screen)
-            brick_center_3.draw(screen)
-            brick_center_4.draw(screen)
+            for brick in self.bricks:
+                brick.draw(self.screen)
 
-            brick_left_1.draw(screen)
-            brick_left_2.draw(screen)
-            brick_left_3.draw(screen)
-
-            brick_right_1.draw(screen)
-            brick_right_2.draw(screen)
-            brick_right_3.draw(screen)
-
-            bound(screen.surface, color=(Config.COLORS["T_ORANGE"]))
+            bound(self.screen.surface, color=(self.config.COLORS["ORANGE"]))
 
             # Tank 1's movement
             keys = pygame.key.get_pressed()
             if keys[pygame.K_w]:
-                if (
-                    tank_1.is_colliding(brick_left_1.coordinate, brick_left_1.dimension)
-                    or tank_1.is_colliding(
-                        brick_left_2.coordinate, brick_left_2.dimension
-                    )
-                    or tank_1.is_colliding(
-                        brick_left_3.coordinate, brick_left_3.dimension
-                    )
-                    or tank_1.is_colliding(
-                        brick_right_1.coordinate, brick_right_1.dimension
-                    )
-                    or tank_1.is_colliding(
-                        brick_right_2.coordinate, brick_right_2.dimension
-                    )
-                    or tank_1.is_colliding(
-                        brick_right_3.coordinate, brick_right_3.dimension
-                    )
-                    or tank_1.is_colliding(
-                        brick_center_1.coordinate, brick_center_1.dimension
-                    )
-                    or tank_1.is_colliding(
-                        brick_center_2.coordinate, brick_center_2.dimension
-                    )
-                    or tank_1.is_colliding(
-                        brick_center_3.coordinate, brick_center_3.dimension
-                    )
-                    or tank_1.is_colliding(
-                        brick_center_4.coordinate, brick_center_4.dimension
-                    )
-                ):
-                    tank_1.coordinate.x -= 1.1
-                    tank_1.coordinate.y -= 1.1
-                else:
-                    tank_1.move_up()
-                    if tank_1.coordinate.y >= 550:
-                        tank_1.coordinate.y = 550 - 20
-                    if tank_1.coordinate.y <= 75:
-                        tank_1.coordinate.y = 75 + 20
-
-                    if tank_1.coordinate.x <= 20:
-                        tank_1.coordinate.x = 20 + 20
-                    if tank_1.coordinate.x >= 750:
-                        tank_1.coordinate.x = 750 - 20
+                has_collision = False
+                for brick in self.bricks:
+                    if self.tank_1.is_colliding(brick.coordinate, brick.dimension):
+                        self.tank_1.coordinate.x -= 1
+                        self.tank_1.coordinate.y -= 1
+                        has_collision = True
+                if not has_collision: self.tank_1.move_up()
 
             if keys[pygame.K_a]:
-                tank_1.rotate(45)
+                self.tank_1.rotate(45)
                 pygame.time.delay(60)
             if keys[pygame.K_d]:
-                tank_1.rotate(-45)
+                self.tank_1.rotate(-45)
                 pygame.time.delay(60)
             if keys[pygame.K_f]:
                 has_ball = False
-                for ball in balls:
-                    if ball.player == 1:
-                        has_ball = True
+                for ball in self.balls: 
+                    if ball.player == 1: has_ball = True
                 if not has_ball:
-                    new_ball = tank_1.fire()
-                    balls.append(new_ball)
+                    new_ball = self.tank_1.fire(
+                        self.config.COLORS["BLACK"], self.config.BALL_DRAW_VELOCITY
+                    )
+                    self.balls.append(new_ball)
                     shot.play()
 
             # Tank 2's movement
             keys = pygame.key.get_pressed()
             if keys[pygame.K_UP]:
-                if (
-                    tank_2.is_colliding(brick_left_1.coordinate, brick_left_1.dimension)
-                    or tank_2.is_colliding(
-                        brick_left_2.coordinate, brick_left_2.dimension
-                    )
-                    or tank_2.is_colliding(
-                        brick_left_3.coordinate, brick_left_3.dimension
-                    )
-                    or tank_2.is_colliding(
-                        brick_right_1.coordinate, brick_right_1.dimension
-                    )
-                    or tank_2.is_colliding(
-                        brick_right_2.coordinate, brick_right_2.dimension
-                    )
-                    or tank_2.is_colliding(
-                        brick_right_3.coordinate, brick_right_3.dimension
-                    )
-                    or tank_2.is_colliding(
-                        brick_center_1.coordinate, brick_center_1.dimension
-                    )
-                    or tank_2.is_colliding(
-                        brick_center_2.coordinate, brick_center_2.dimension
-                    )
-                    or tank_2.is_colliding(
-                        brick_center_3.coordinate, brick_center_3.dimension
-                    )
-                    or tank_2.is_colliding(
-                        brick_center_4.coordinate, brick_center_4.dimension
-                    )
-                ):
-                    tank_2.coordinate.x += 1.1
-                    tank_2.coordinate.y -= 1.1
-                else:
-                    tank_2.move_up()
-                    if tank_2.coordinate.y >= 550:
-                        tank_2.coordinate.y = 550 - 20
-                    if tank_2.coordinate.y <= 75:
-                        tank_2.coordinate.y = 75 + 20
-
-                    if tank_2.coordinate.x <= 20:
-                        tank_2.coordinate.x = 20 + 20
-                    if tank_2.coordinate.x >= 750:
-                        tank_2.coordinate.x = 750 - 20
+                has_collision = False
+                for brick in self.bricks:
+                    if self.tank_2.is_colliding(brick.coordinate, brick.dimension):
+                        self.tank_2.coordinate.x += 1.1
+                        self.tank_2.coordinate.y -= 1.1
+                        has_collision = True
+                if not has_collision: self.tank_2.move_up()
 
             if keys[pygame.K_LEFT]:
-                tank_2.rotate(45)
+                self.tank_2.rotate(45)
                 pygame.time.delay(60)
             if keys[pygame.K_RIGHT]:
-                tank_2.rotate(-45)
+                self.tank_2.rotate(-45)
                 pygame.time.delay(60)
             if keys[pygame.K_SPACE]:
                 has_ball = False
-                for ball in balls:
-                    if ball.player == 2:
-                        has_ball = True
+                for ball in self.balls:
+                    if ball.player == 2: has_ball = True
                 if not has_ball:
-                    new_ball = tank_2.fire()
-                    balls.append(new_ball)
+                    new_ball = self.tank_2.fire(
+                        self.config.COLORS["BLACK"], self.config.BALL_DRAW_VELOCITY
+                    )
+                    self.balls.append(new_ball)
                     shot.play()
 
             pygame.display.update()

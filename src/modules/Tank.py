@@ -1,10 +1,6 @@
-from random import randint
 from secrets import choice
-from typing import Sequence
 import pygame
-from config import Config
 from modules.Ball import Ball
-from modules.Brick import Brick
 from modules.Coordinate import Coordinate
 from modules.Dimension import Dimension
 from modules.Screen import Screen
@@ -24,7 +20,14 @@ BRICK_POSITIONS = [
 
 
 class Tank(pygame.sprite.Sprite):
-    def __init__(self, coordinate: Coordinate, sprite_path: str, player: int):
+    def __init__(
+        self,
+        coordinate: Coordinate,
+        sprite_path: str,
+        player: int,
+        screen_width: int,
+        screen_height: int,
+    ):
 
         super(Tank, self).__init__()
         self.coordinate = coordinate
@@ -32,11 +35,9 @@ class Tank(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (self.coordinate.x, self.coordinate.y)
         self.dimension = Dimension(self.rect.width, self.rect.height)
-        self.range_allowed_x = list(
-            range(21, Config.SCREEN_WIDTH - self.dimension.width + 1)
-        )
+        self.range_allowed_x = list(range(21, screen_width - self.dimension.width + 1))
         self.range_allowed_y = list(
-            range(76, Config.SCREEN_HEIGHT - self.dimension.height + 1)
+            range(76, screen_height - self.dimension.height + 1)
         )
         self.x_velocity = 1.0  # Default tank velocity
         self.y_velocity = 1.0  # Default tank velocity
@@ -54,7 +55,7 @@ class Tank(pygame.sprite.Sprite):
 
     def change_position(
         self,
-    ):  # TODO: Add tank collision with the ball to undo this comment
+    ):  # Add tank collision with the ball to undo this comment
         new_x = choice(self.range_allowed_x)
         new_y = choice(self.range_allowed_y)
 
@@ -98,6 +99,16 @@ class Tank(pygame.sprite.Sprite):
         self.coordinate.x += 1 * self.x_velocity
         self.coordinate.y += 1 * self.y_velocity
 
+        if self.coordinate.y >= 550:
+            self.coordinate.y = 550 - 20
+        if self.coordinate.y <= 75:
+            self.coordinate.y = 75 + 20
+
+        if self.coordinate.x <= 20:
+            self.coordinate.x = 20 + 20
+        if self.coordinate.x >= 750:
+            self.coordinate.x = 750 - 20
+
     def is_colliding(self, coordinate: Coordinate, dimension: Dimension) -> bool:
         x_colision = coordinate.x <= self.coordinate.x <= coordinate.x + dimension.width
         y_colision = (
@@ -122,15 +133,22 @@ class Tank(pygame.sprite.Sprite):
             or (x_final_colision and y_colision)
         )
 
-    def fire(self) -> Ball:
+    def fire(self, ball_color: pygame.Color, velocity: float) -> Ball:
         ball_coordinate = Coordinate(
             self.coordinate.x + self.dimension.width / 2,
             self.coordinate.y + self.dimension.height / 2,
         )
         ball_dimension = Dimension(5, 5)
-        return Ball(ball_coordinate, ball_dimension, self.current_angle, self.player)
+        return Ball(
+            ball_coordinate,
+            ball_dimension,
+            self.current_angle,
+            self.player,
+            ball_color,
+            velocity,
+        )
 
-    def draw(self, screen: Screen):  # TODO: Draw a tank
+    def draw(self, screen: Screen):  # Draw a tank
         screen.surface.blit(
             pygame.transform.rotate(self.image, self.current_angle),
             (self.coordinate.x, self.coordinate.y),

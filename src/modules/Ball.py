@@ -1,5 +1,5 @@
+from turtle import color
 import pygame
-from config import Config
 from modules.Brick import Brick
 from modules.Coordinate import Coordinate
 from modules.Dimension import Dimension
@@ -8,13 +8,21 @@ from modules.Screen import Screen
 
 class Ball:
     def __init__(
-        self, coordinate: Coordinate, dimension: Dimension, angle: float, player: int
+        self,
+        coordinate: Coordinate,
+        dimension: Dimension,
+        angle: float,
+        player: int,
+        color: pygame.Color,
+        velocity: float,
     ):
         self.coordinate = coordinate
         self.dimension = dimension
         self.hits = 0  # number of hits on the wall
         self.player = player  # Who fire the ball
         self.angle = angle
+        self.color = color
+        self.velocity = velocity
         self.x_velocity = 1.0  # ball velocity
         self.y_velocity = 1.0  # ball velocity
         self.init_velocity()
@@ -47,7 +55,7 @@ class Ball:
 
     def change_direction(
         self, brick: Brick
-    ):  # TODO: Add ball collision with the bricks to undo this comment
+    ):  # Add ball collision with the bricks to undo this comment
         if self.coordinate.x == brick.coordinate.x:
             percents = (self.coordinate.y - brick.coordinate.y) / brick.dimension.height
 
@@ -81,7 +89,7 @@ class Ball:
         )
         return x_colision and y_colision
 
-    def draw(self, screen: Screen):  # TODO: Fires at a coordinate
+    def draw(self, screen: Screen):  # Fires at a coordinate
         from pygame import mixer
 
         mixer.init()
@@ -92,11 +100,11 @@ class Ball:
         colision_4 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall4.wav")
         colision_5 = pygame.mixer.Sound("src/sounds/Ball_to_wall/ball_wall5.wav")
 
-        self.coordinate.x += Config.BALL_DRAW_VELOCITY * self.x_velocity
-        self.coordinate.y += Config.BALL_DRAW_VELOCITY * self.y_velocity
+        self.coordinate.x += self.velocity * self.x_velocity
+        self.coordinate.y += self.velocity * self.y_velocity
         pygame.draw.rect(
             screen.surface,
-            Config.COLORS["BLACK"],
+            self.color,
             (
                 self.coordinate.x,
                 self.coordinate.y,

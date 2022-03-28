@@ -1,12 +1,12 @@
 import pygame
-from config import Config
 from modules.Dimension import Dimension
 
 
 class Screen:
-    def __init__(self, dimension: Dimension):
+    def __init__(self, dimension: Dimension, background_color: pygame.Color):
         self.surface = pygame.display.set_mode((dimension.width, dimension.height))
         self.dimension = dimension
+        self.background_color = background_color
 
-    def draw(self):  # TODO: Draw screen
-        self.surface.fill((Config.COLORS["T_GREEN"]))
+    def draw(self):  # Draw screen
+        self.surface.fill(self.background_color)

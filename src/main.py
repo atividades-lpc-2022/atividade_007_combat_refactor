@@ -1,5 +1,12 @@
+from config import Config
 from game import Game
 
 
-game = Game()
-game.play()
+class Main:
+    def init(self):
+        game = Game(Config())
+        game.play()
+
+
+main = Main()
+main.init()
