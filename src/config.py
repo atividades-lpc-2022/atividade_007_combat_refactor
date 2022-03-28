@@ -31,3 +31,31 @@ class Config:
         "T_ORANGE": Color(239, 154, 81),
         "T_GREEN": Color(140, 150, 64),
     }
+
+    BRICKS_COORDINATES = {
+        "XB_C1": (SCREEN_WIDTH/2) - 17.5,
+        "XB_C2": (SCREEN_WIDTH/2) - 17.5,
+        "XB_C3": SCREEN_WIDTH*(0.4) - 80,
+        "XB_C4": SCREEN_WIDTH*(0.6),
+        "YB_C1": 180,
+        "YB_C2":  425,
+        "YB_C3": 325,
+        "YB_C4":  325,
+
+        "XB_L1":  120,
+        "YB_L1":  270,
+        "XB_L2": 103,
+        "YB_L2": 253,
+        "XB_L3":  103,
+        "YB_L3":  380,
+
+
+        "XB_R1":  680,
+        "YB_R1":  270,
+        "XB_R2": 680,
+        "YB_R2": 253,
+        "XB_R3":  680,
+        "YB_R3":  380,
+    }
+
+ 
