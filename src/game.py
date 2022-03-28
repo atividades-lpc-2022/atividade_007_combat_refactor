@@ -209,7 +209,7 @@ class Game:
             brick_right_2.draw(screen)
             brick_right_3.draw(screen)
 
-            bound(screen.surface, color=(Config.COLORS["T_ORANGE"]))
+            Boundaries.bound(screen.surface, color=(Config.COLORS["T_ORANGE"]))
 
             # Tank 1's movement
             keys = pygame.key.get_pressed()
