@@ -1,3 +1,4 @@
+from distutils.command.config import config
 from typing import Sequence
 import pygame
 from modules.Brick import Brick
@@ -66,45 +67,68 @@ class Game:
 
         # Bricks
         brick_center_1 = Brick(
-            Coordinate(Config.SCREEN_WIDTH / 2 - 17.5, 180),
+            Coordinate(Config.BRICKS_COORDINATES["XB_C1"], 
+            Config.BRICKS_COORDINATES["YB_C1"]),
             Dimension(35, 80),
             Config.COLORS["T_ORANGE"],
         )
         brick_center_2 = Brick(
-            Coordinate(Config.SCREEN_WIDTH / 2 - 17.5, 425),
+            Coordinate(Config.BRICKS_COORDINATES["XB_C2"],
+            Config.BRICKS_COORDINATES["YB_C2"]),
             Dimension(35, 80),
             Config.COLORS["T_ORANGE"],
         )
         brick_center_3 = Brick(
-            Coordinate(Config.SCREEN_WIDTH * (0.4) - 80, 325),
+            Coordinate(Config.BRICKS_COORDINATES["XB_C3"],
+            Config.BRICKS_COORDINATES["YB_C3"]),
             Dimension(80, 30),
             Config.COLORS["T_ORANGE"],
         )
         brick_center_4 = Brick(
-            Coordinate(Config.SCREEN_WIDTH * (0.6), 325),
+            Coordinate(Config.BRICKS_COORDINATES["XB_C4"],
+            Config.BRICKS_COORDINATES["YB_C4"]),
             Dimension(80, 30),
             Config.COLORS["T_ORANGE"],
         )
 
         brick_left_1 = Brick(
-            Coordinate(120, 270), Dimension(17, 110), Config.COLORS["T_ORANGE"]
+            Coordinate(Config.BRICKS_COORDINATES["XB_L1"], 
+            Config.BRICKS_COORDINATES["YB_L1"] ),
+            Dimension(17, 110), 
+            Config.COLORS["T_ORANGE"]
         )
         brick_left_2 = Brick(
-            Coordinate(103, 253), Dimension(34, 17), Config.COLORS["T_ORANGE"]
+            Coordinate(Config.BRICKS_COORDINATES["XB_L2"], 
+            Config.BRICKS_COORDINATES["YB_L2"] ),
+            Dimension(34, 17), 
+            Config.COLORS["T_ORANGE"]
         )
         brick_left_3 = Brick(
-            Coordinate(103, 380), Dimension(34, 17), Config.COLORS["T_ORANGE"]
+            Coordinate(Config.BRICKS_COORDINATES["XB_L3"], 
+            Config.BRICKS_COORDINATES["YB_L3"]),
+            Dimension(34, 17), 
+            Config.COLORS["T_ORANGE"]
         )
 
         brick_right_1 = Brick(
-            Coordinate(680, 270), Dimension(17, 110), Config.COLORS["T_ORANGE"]
+            Coordinate(Config.BRICKS_COORDINATES["XB_R1"], 
+            Config.BRICKS_COORDINATES["YB_R1"] ),
+            Dimension(17, 110), 
+            Config.COLORS["T_ORANGE"]
         )
         brick_right_2 = Brick(
-            Coordinate(680, 253), Dimension(34, 17), Config.COLORS["T_ORANGE"]
+            Coordinate(Config.BRICKS_COORDINATES["XB_R2"], 
+            Config.BRICKS_COORDINATES["YB_R2"] ),
+            Dimension(34, 17), 
+            Config.COLORS["T_ORANGE"]
         )
         brick_right_3 = Brick(
-            Coordinate(680, 380), Dimension(34, 17), Config.COLORS["T_ORANGE"]
+            Coordinate(Config.BRICKS_COORDINATES["XB_R3"], 
+            Config.BRICKS_COORDINATES["YB_R3"] ),
+            Dimension(34, 17), 
+            Config.COLORS["T_ORANGE"]
         )
+
 
         while self.is_running:
             self.use_global_events()
