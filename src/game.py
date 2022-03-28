@@ -124,7 +124,7 @@ class Game:
             for brick in self.bricks:
                 brick.draw(self.screen)
 
-            bound(self.screen.surface, color=(self.config.COLORS["ORANGE"]))
+            Boundaries.bound(self.screen.surface, color=(self.config.COLORS["ORANGE"]))
 
             # Tank 1's movement
             keys = pygame.key.get_pressed()
