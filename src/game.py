@@ -7,7 +7,7 @@ from modules.HUD import HUD
 from modules.Score import Score
 from modules.Tank import Tank
 from modules.Screen import Screen
-from modules.Boundaries import *
+from modules.Boundary import Boundary
 from modules.Ball import Ball
 from config import Config
 
@@ -22,6 +22,7 @@ class Game:
         self.tank_1: Tank = None
         self.tank_2: Tank = None
         self.hud: HUD = None
+        self.boundary: Boundary = None
         self.balls: Sequence[Ball] = []
         self.bricks: Sequence[Brick] = []
 
@@ -83,6 +84,9 @@ class Game:
                 )
             )
 
+        # Boundaries
+        self.boundary = Boundary(self.config.COLORS["ORANGE"])
+
         while self.is_running:
             self.use_global_events()
 
@@ -124,7 +128,7 @@ class Game:
             for brick in self.bricks:
                 brick.draw(self.screen)
 
-            Boundaries.bound(self.screen.surface, color=(self.config.COLORS["ORANGE"]))
+            self.boundary.draw(self.screen.surface)
 
             # Tank 1's movement
             keys = pygame.key.get_pressed()
